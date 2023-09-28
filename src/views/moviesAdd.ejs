@@ -20,18 +20,23 @@
             <p>
                 <input type="text" name="title" id="" value="<%= locals.old && (old.title && old.title) %>">
             </p>
+            <small class="ms-2 text-danger" style="color: red;"><%= locals.errors && (errors.title && errors.title.msg) %></small>
 
-            <small class="ms-2 text-danger"><%= locals.errors && (errors.title && errors.title.msg) %></small>
-            
             <label for="rating">Rating </label>
             <p><input type="number" name="rating" id="" > </p>  
+            <small class="ms-2 text-danger" style="color: red;"><%= locals.errors && (errors.rating && errors.rating.msg) %></small>
+
             <label for="awards">Awards </label>
             <p><input type="number" name="awards" id="" ></p>
+            <small class="ms-2 text-danger" style="color: red;"><%= locals.errors && (errors.awards && errors.awards.msg) %></small>
+
             <label for="release_date">Release date </label>
             <p><input type="date" name="release_date" id="" ></p>
+            <small class="ms-2 text-danger" style="color: red;"><%= locals.errors && (errors.release_date && errors.release_date.msg) %></small>
+            
             <label for="length">Length </label>
             <p><input type="number" name="length" id="" ></p>
-
+            <small class="ms-2 text-danger" style="color: red;"><%= locals.errors && (errors.length && errors.length.msg) %></small>
             <br>
             <p> <button class="botonAgregar" type="submit">Agregar</button>
             

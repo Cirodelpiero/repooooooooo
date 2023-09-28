@@ -1,7 +1,8 @@
 const { validationResult } = require('express-validator');
 const db = require('../database/models');
 const sequelize = db.sequelize;
-const moment = require('moment')
+const moment = require('moment');
+const { asIs } = require('sequelize');
 
 //Otra forma de llamar a los modelos
 const Movies = db.Movie;
@@ -46,9 +47,11 @@ const moviesController = {
     add: function (req, res) {
         return res.render('moviesAdd')  
     },
+
     create: function (req, res) {
-        let error = validationResult(req)
-        if(error.isEmpty){
+        let errors = validationResult(req)
+
+        if(errors.isEmpty()){
         const {title, rating, awards,release_date,length} = req.body
         db.Movie.create({
             title: title.trim(),
@@ -62,9 +65,10 @@ const moviesController = {
                 console.log(movie);
                 return res.redirect('/movies')
             })
-            .catch(error => console.log(error))
+            
     }else{
-        return res.render('register', {
+    
+        return res.render('moviesAdd', {
             old : req.body,
             errors : errors.mapped()
         })
@@ -83,6 +87,10 @@ const moviesController = {
             .catch(error => console.log(error))
     },
     update: function (req,res) {
+
+        let errors = validationResult(req)
+
+        if(errors.isEmpty()){
         const {title, rating, awards,release_date,length} = req.body
         db.Movie.update(
             {
@@ -106,17 +114,41 @@ const moviesController = {
                     })
                 })
         })
-        .catch(error => console.log(error))
+    }else{
+        return res.render('moviesDetail', {
+            old : req.body,
+            errors : errors.mapped()
+        })
+    }
+        
 
         
         
     },
-    delete: function (req, res) {
-        // TODO
+    delete: async function (req, res) {
+        const movie = await db.Movie.findByPk(req.params.id)
+        res.render("moviesDelete",{
+            Movie:movie
+        })
     },
     destroy: function (req, res) {
-        // TODO
+    
+        db.Movie.destroy({
+            where: {
+                id: req.params.id
+            }
+        })
+        .then(() => {
+
+            res.redirect('/movies');
+        })
+        .catch(error => {
+            console.error('Error al eliminar la película:', error);
+            
+            res.redirect('/movies'); 
+        });
     }
+    
 
 }
 
